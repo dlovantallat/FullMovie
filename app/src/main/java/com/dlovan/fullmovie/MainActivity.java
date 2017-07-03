@@ -1,6 +1,9 @@
 package com.dlovan.fullmovie;
 
+import android.content.Context;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import rx.Observer;
@@ -21,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter adapter;
 
     private Subscription subscription;
-    public static TextView mEmptyView;
+    public TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MovieAdapter(MainActivity.this);
         recyclerView.setAdapter(adapter);
 
-        getMovie("5ba1e2bf08bea434def560bf5014dbb8");
+        //this is for checking internet
+        checkInternet();
     }
 
     @Override
@@ -93,5 +99,33 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return orientation;
+    }
+
+    public void reloadInternet(View view) {
+        checkInternet();
+    }
+
+    public void checkInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        TextView nInternet = (TextView) findViewById(R.id.no_internet);
+        ImageView imageView = (ImageView) findViewById(R.id.no_internet_image);
+        Button btnReload = (Button) findViewById(R.id.btn_reload);
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            getMovie("5ba1e2bf08bea434def560bf5014dbb8");
+
+            Log.d("NO_INTERNET", "if work");
+            nInternet.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
+            btnReload.setVisibility(View.GONE);
+        } else {
+            Log.d("NO_INTERNET", "else work");
+            nInternet.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
+            btnReload.setVisibility(View.VISIBLE);
+            nInternet.setText("No Internet Connection");
+        }
     }
 }
