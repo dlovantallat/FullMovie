@@ -1,8 +1,9 @@
 package com.dlovan.fullmovie;
 
-import rx.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * Created by dlovan on 7/2/17.
@@ -10,6 +11,6 @@ import retrofit2.http.Query;
 
 public interface MovieService {
 
-    @GET("movie/popular")
-    Observable<Movies> getMovies(@Query("api_key") String apiKey);
+    @GET("movie/{type}")
+    Observable<Movies> getMovies(@Path("type") String type, @Query("api_key") String apiKey);
 }

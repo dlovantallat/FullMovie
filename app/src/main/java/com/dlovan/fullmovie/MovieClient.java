@@ -29,7 +29,7 @@ public class MovieClient {
         return instance;
     }
 
-    public Observable<Movies> getMovies(String apiKey) {
-        return movieService.getMovies(apiKey);
+    public Observable<Movies> getMovies(String type, String apiKey) {
+        return movieService.getMovies(type, apiKey);
     }
 }
