@@ -7,6 +7,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
+import android.widget.TextView;
 
 import rx.Observer;
 import rx.Subscription;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter adapter;
 
     private Subscription subscription;
+    public static TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = (RecyclerView) findViewById(R.id.rec_list);
+        mEmptyView = (TextView) findViewById(R.id.empty_view);
 
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -62,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        recyclerView.setVisibility(View.GONE);
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mEmptyView.setText("No movie Found");
                         e.printStackTrace();
                         Log.d("TAG", "In onError()");
                     }
