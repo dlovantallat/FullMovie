@@ -50,9 +50,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/no_internet"
         android:layout_centerHorizontal="true"
+        android:onClick="reloadInternet"
         android:text="reload"
         android:visibility="gone"
-        android:onClick="reloadInternet"
         tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

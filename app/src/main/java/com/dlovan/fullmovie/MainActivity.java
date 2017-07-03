@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import rx.Observer;
@@ -67,7 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(new Observer<Movies>() {
                     @Override
                     public void onCompleted() {
-
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        ProgressBar progressBar = (ProgressBar) findViewById(R.id.loading_indicator);
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -103,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void reloadInternet(View view) {
         checkInternet();
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.loading_indicator);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     public void checkInternet() {
@@ -126,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
             imageView.setVisibility(View.VISIBLE);
             btnReload.setVisibility(View.VISIBLE);
             nInternet.setText("No Internet Connection");
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.loading_indicator);
+            progressBar.setVisibility(View.GONE);
         }
     }
 }
