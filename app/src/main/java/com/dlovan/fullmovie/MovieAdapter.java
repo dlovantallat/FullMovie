@@ -39,7 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
         final Movie movie = list.get(position);
         holder.title.setText(movie.getTitle());
-        Picasso.with(context).load(movie.getPoster_path()).into(holder.imageMovie);
+        Picasso.with(context).load(movie.getPoster_path()).placeholder(R.drawable.placeholders).error(R.drawable.placeholders).into(holder.imageMovie);
 
     }
 
