@@ -59,6 +59,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
             public void onClick(View view) {
 //                Toast.makeText(context, movie.getTitle() + "", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("ID", movie.getId());
                 intent.putExtra("TITLE", movie.getTitle());
                 context.startActivity(intent);
             }

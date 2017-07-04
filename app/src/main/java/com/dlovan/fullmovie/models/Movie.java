@@ -8,6 +8,22 @@ public class Movie {
 
     private String posterPath;
     private String title;
+    private int id;
+    private String overview;
+    private double voteAverage;
+    private String backdropPath;
+
+    public String getBackdropPath() {
+        return "https://image.tmdb.org/t/p/w500" + backdropPath;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public double getVoteAverage() {
+        return voteAverage;
+    }
 
     public String getPosterPath() {
         return "https://image.tmdb.org/t/p/w500" + posterPath;
@@ -15,5 +31,9 @@ public class Movie {
 
     public String getTitle() {
         return title;
+    }
+
+    public int getId() {
+        return id;
     }
 }

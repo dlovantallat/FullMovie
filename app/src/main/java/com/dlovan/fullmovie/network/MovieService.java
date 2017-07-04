@@ -1,5 +1,6 @@
 package com.dlovan.fullmovie.network;
 
+import com.dlovan.fullmovie.models.Movie;
 import com.dlovan.fullmovie.models.Movies;
 
 import retrofit2.http.GET;
@@ -15,4 +16,7 @@ public interface MovieService {
 
     @GET("movie/{type}")
     Observable<Movies> getMovies(@Path("type") String type, @Query("api_key") String apiKey);
+
+    @GET("movie/{movieId}")
+    Observable<Movie> getMovie(@Path("movieId") int movieId, @Query("api_key") String apiKey);
 }

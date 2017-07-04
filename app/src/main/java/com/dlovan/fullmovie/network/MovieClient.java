@@ -1,5 +1,6 @@
 package com.dlovan.fullmovie.network;
 
+import com.dlovan.fullmovie.models.Movie;
 import com.dlovan.fullmovie.models.Movies;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -45,5 +46,9 @@ public class MovieClient {
 
     public Observable<Movies> getMovies(String type, String apiKey) {
         return movieService.getMovies(type, apiKey);
+    }
+
+    public Observable<Movie> getMovie(int movieId, String apiKey) {
+        return movieService.getMovie(movieId, apiKey);
     }
 }
