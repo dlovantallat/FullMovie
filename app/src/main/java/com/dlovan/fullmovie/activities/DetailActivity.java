@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +47,9 @@ public class DetailActivity extends AppCompatActivity {
 
     @BindView(R.id.vote_average)
     TextView vote;
+
+    @BindView(R.id.star)
+    ImageView star;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +139,8 @@ public class DetailActivity extends AppCompatActivity {
                                 .placeholder(R.drawable.placeholders)
                                 .error(R.drawable.placeholders)
                                 .into(backdrop);
+
+                        star.setVisibility(View.VISIBLE);
                     }
                 });
     }
