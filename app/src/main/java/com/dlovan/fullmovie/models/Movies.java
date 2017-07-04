@@ -1,4 +1,4 @@
-package com.dlovan.fullmovie;
+package com.dlovan.fullmovie.models;
 
 import java.util.List;
 

@@ -1,8 +1,11 @@
-package com.dlovan.fullmovie;
+package com.dlovan.fullmovie.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.dlovan.fullmovie.fragments.PopularFragment;
+import com.dlovan.fullmovie.fragments.TopRatedFragment;
 
 /**
  * Created by dlovan on 7/3/17.
@@ -18,9 +21,9 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new Popular();
+                return new PopularFragment();
             case 1:
-                return new TopRated();
+                return new TopRatedFragment();
             default:
                 return null;
         }

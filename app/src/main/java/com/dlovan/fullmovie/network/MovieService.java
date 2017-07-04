@@ -1,4 +1,6 @@
-package com.dlovan.fullmovie;
+package com.dlovan.fullmovie.network;
+
+import com.dlovan.fullmovie.models.Movies;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;

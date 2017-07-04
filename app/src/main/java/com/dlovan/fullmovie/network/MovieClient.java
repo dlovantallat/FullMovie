@@ -1,4 +1,9 @@
-package com.dlovan.fullmovie;
+package com.dlovan.fullmovie.network;
+
+import com.dlovan.fullmovie.models.Movies;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -17,7 +22,16 @@ public class MovieClient {
     private MovieService movieService;
 
     private MovieClient() {
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(BASE_MOVIE_URL).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).addConverterFactory(GsonConverterFactory.create());
+
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl(BASE_MOVIE_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson));
+
         Retrofit retrofit = builder.build();
         movieService = retrofit.create(MovieService.class);
     }

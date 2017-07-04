@@ -1,4 +1,4 @@
-package com.dlovan.fullmovie;
+package com.dlovan.fullmovie.fragments;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -19,6 +19,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.dlovan.fullmovie.adapter.MovieAdapter;
+import com.dlovan.fullmovie.R;
+import com.dlovan.fullmovie.models.Movies;
+import com.dlovan.fullmovie.network.MovieClient;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observer;
@@ -30,8 +35,7 @@ import rx.schedulers.Schedulers;
  * Created by dlovan on 7/3/17.
  */
 
-public class Popular extends Fragment {
-
+public class TopRatedFragment extends Fragment {
 
     @BindView(R.id.rec_list)
     RecyclerView recyclerView;
@@ -48,12 +52,13 @@ public class Popular extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.pager_fragment, container, false);
         ButterKnife.bind(this, root);
+
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (Configuration.ORIENTATION_LANDSCAPE == getScreenOrientation()) {
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         }
 
         adapter = new MovieAdapter(getActivity());
@@ -85,7 +90,7 @@ public class Popular extends Fragment {
 
     private void getMovie(String username) {
         subscription = MovieClient.getInstance()
-                .getMovies("popular", username)
+                .getMovies("top_rated", username)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Movies>() {
