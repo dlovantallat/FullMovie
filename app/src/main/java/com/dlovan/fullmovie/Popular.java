@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,21 +33,21 @@ import rx.schedulers.Schedulers;
 public class Popular extends Fragment {
 
 
-    private RecyclerView recyclerView;
-    private MovieAdapter adapter;
-
-    private Subscription subscription;
+    @BindView(R.id.rec_list)
+    RecyclerView recyclerView;
+    @BindView(R.id.empty_view)
     public TextView mEmptyView;
+
+    MovieAdapter adapter;
+    private Subscription subscription;
+
     View root;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.pager_fragment, container, false);
-
-        recyclerView = (RecyclerView) root.findViewById(R.id.rec_list);
-        mEmptyView = (TextView) root.findViewById(R.id.empty_view);
-
+        ButterKnife.bind(this, root);
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if (Configuration.ORIENTATION_LANDSCAPE == getScreenOrientation()) {
