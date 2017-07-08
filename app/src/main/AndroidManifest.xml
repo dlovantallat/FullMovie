@@ -19,12 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.DetailActivity">
-        </activity>
+        <activity android:name=".activities.DetailActivity"></activity>
+
         <provider
-            android:authorities="com.dlovan.fullmovie.MovieContentProvider"
-            android:name=".provider.MovieContentProvider"/>
+            android:name=".provider.MovieContentProvider"
+            android:authorities="com.dlovan.fullmovie.MovieContentProvider" />
+
+        <service android:name=".service.MovieServiceDownload" />
     </application>
 
 </manifest>

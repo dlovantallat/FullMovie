@@ -1,6 +1,7 @@
 package com.dlovan.fullmovie.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,15 +22,11 @@ import android.widget.TextView;
 
 import com.dlovan.fullmovie.R;
 import com.dlovan.fullmovie.adapter.MovieAdapter;
-import com.dlovan.fullmovie.models.Movies;
-import com.dlovan.fullmovie.network.MovieClient;
+import com.dlovan.fullmovie.service.MovieServiceDownload;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observer;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by dlovan on 7/4/17.
@@ -84,42 +81,6 @@ public abstract class SubFragments extends Fragment {
         return root;
     }
 
-    @Override
-    public void onDestroy() {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
-        super.onDestroy();
-    }
-
-    private void getMovie(String username) {
-        subscription = MovieClient.getInstance()
-                .getMovies(getType(), username)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Movies>() {
-                    @Override
-                    public void onCompleted() {
-                        ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.loading_indicator);
-                        progressBar.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        recyclerView.setVisibility(View.GONE);
-                        mEmptyView.setVisibility(View.VISIBLE);
-                        mEmptyView.setText("No movie Found");
-                        e.printStackTrace();
-                        Log.d("TAG", "In onError()");
-                    }
-
-                    @Override
-                    public void onNext(Movies movies) {
-                        adapter.setMovieList(movies.getResults());
-                    }
-                });
-    }
-
     public int getScreenOrientation() {
         Display getOrient = getActivity().getWindowManager().getDefaultDisplay();
         int orientation = Configuration.ORIENTATION_UNDEFINED;
@@ -144,7 +105,12 @@ public abstract class SubFragments extends Fragment {
         Button btnReload = (Button) root.findViewById(R.id.btn_reload);
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            getMovie("5ba1e2bf08bea434def560bf5014dbb8");
+//            getMovie("5ba1e2bf08bea434def560bf5014dbb8");
+
+            Intent intent = new Intent(getActivity(), MovieServiceDownload.class);
+            intent.putExtra(MovieServiceDownload.Api_key, "5ba1e2bf08bea434def560bf5014dbb8");
+            intent.putExtra(MovieServiceDownload.TYPE, getType());
+            getActivity().startService(intent);
 
             Log.d("NO_INTERNET", "if work");
             nInternet.setVisibility(View.GONE);
