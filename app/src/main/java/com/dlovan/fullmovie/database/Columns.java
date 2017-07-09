@@ -29,7 +29,7 @@ public interface Columns {
         String POSTER_PATH = "poster_path";
 
         @DataType(Type.TEXT)
-        @Check(Columns.ListMovie.STATUS + " in ('" + ListMovie.STATUS_POPULAR + "', '" + ListMovie.STATUS_TOPRATED + "')")
+        @Check(Columns.ListMovie.STATUS + " in ('" + STATUS_POPULAR + "', '" + STATUS_TOPRATED + "')")
         String STATUS = "status";
     }
 

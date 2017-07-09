@@ -15,7 +15,6 @@ import com.dlovan.fullmovie.activities.DetailActivity;
 import com.dlovan.fullmovie.models.Movie;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,7 +26,7 @@ import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
 
-    private List<Movie> list = new ArrayList<>();
+    private List<Movie> list = null;
     private Context context;
 
     public MovieAdapter(Context context) {

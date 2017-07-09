@@ -12,6 +12,13 @@ public class Movie {
     private String overview;
     private double voteAverage;
     private String backdropPath;
+    private String status;
+
+    public Movie(String title, String image, String status) {
+        this.title = title;
+        this.posterPath = image;
+        this.status = status;
+    }
 
     public String getBackdropPath() {
         return "https://image.tmdb.org/t/p/w500" + backdropPath;
@@ -35,5 +42,13 @@ public class Movie {
 
     public int getId() {
         return id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

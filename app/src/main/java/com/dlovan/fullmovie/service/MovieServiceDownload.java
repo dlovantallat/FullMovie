@@ -11,8 +11,8 @@ import com.dlovan.fullmovie.models.Movie;
 import com.dlovan.fullmovie.models.Movies;
 import com.dlovan.fullmovie.network.MovieClient;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import rx.Observer;
 import rx.Subscription;
@@ -68,21 +68,27 @@ public class MovieServiceDownload extends IntentService {
 
                     @Override
                     public void onNext(Movies movies) {
+
                         List<Movie> list = movies.getResults();
 
-                        Vector<ContentValues> cVVector = new Vector<>(list.size());
+                        List<ContentValues> values = new ArrayList<>();
+
                         for (int i = 0; i < list.size(); i++) {
-                            ContentValues values = new ContentValues();
+                            ContentValues value = new ContentValues();
                             Movie movie = list.get(i);
-                            values.put(Columns.ListMovie.TITLE, movie.getTitle());
-                            values.put(Columns.ListMovie.POSTER_PATH, movie.getPosterPath());
-                            values.put(Columns.ListMovie.STATUS, type);
+                            value.put(Columns.ListMovie.TITLE, movie.getTitle());
+                            value.put(Columns.ListMovie.POSTER_PATH, movie.getPosterPath());
+                            value.put(Columns.ListMovie.STATUS, type);
+
+                            values.add(value);
                         }
 
-                        ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                        cVVector.toArray(cvArray);
+                        getContentResolver().delete(MovieContentProvider.ListMovie.CONTENT_URI,
+                                null, null);
 
-                        getApplicationContext().getContentResolver().bulkInsert(MovieContentProvider.ListMovie.CONTENT_URI, cvArray);
+                        getContentResolver()
+                                .bulkInsert(MovieContentProvider.ListMovie.CONTENT_URI,
+                                        values.toArray(new ContentValues[values.size()]));
                     }
                 });
     }
