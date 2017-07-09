@@ -44,8 +44,12 @@ public class MovieClient {
         return instance;
     }
 
-    public Observable<Movies> getMovies(String type, String apiKey) {
-        return movieService.getMovies(type, apiKey);
+    public Observable<Movies> getMoviesPopular(String apiKey) {
+        return movieService.getMoviesPopular(apiKey);
+    }
+
+    public Observable<Movies> getMoviesTopRated(String apiKey) {
+        return movieService.getMoviesTopRated(apiKey);
     }
 
     public Observable<Movie> getMovie(int movieId, String apiKey) {

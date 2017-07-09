@@ -1,5 +1,6 @@
 package com.dlovan.fullmovie.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -8,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.dlovan.fullmovie.R;
 import com.dlovan.fullmovie.adapter.PagerAdapter;
+import com.dlovan.fullmovie.service.MovieServiceDownload;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,5 +34,8 @@ public class MainActivity extends AppCompatActivity {
         pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
 
         tabs.setupWithViewPager(pager);
+
+        Intent intent = new Intent(this, MovieServiceDownload.class);
+        startService(intent);
     }
 }

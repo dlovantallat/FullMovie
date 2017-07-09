@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -25,37 +23,20 @@ import rx.schedulers.Schedulers;
 
 public class MovieServiceDownload extends IntentService {
 
-    private Subscription subscription;
-    public static final String Api_key = "api_key";
-    public static final String TYPE = "type";
-
     public MovieServiceDownload() {
         super("Movie");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i("Movie", "onHandleIntent: service started.");
-
-        String apiKey = intent.getStringExtra(Api_key);
-        String type = intent.getStringExtra(TYPE);
-
-        getMovie(type, apiKey);
+        getMoviePopular("5ba1e2bf08bea434def560bf5014dbb8");
+        getMovieTopRated("5ba1e2bf08bea434def560bf5014dbb8");
     }
 
-    @Override
-    public void onDestroy() {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
-        super.onDestroy();
-    }
-
-    private void getMovie(final String type, String apiKey) {
-        subscription = MovieClient.getInstance()
-                .getMovies(type, apiKey)
+    private void getMoviePopular(String apiKey) {
+        MovieClient.getInstance()
+                .getMoviesPopular(apiKey)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Movies>() {
                     @Override
                     public void onCompleted() {
@@ -71,49 +52,49 @@ public class MovieServiceDownload extends IntentService {
                     @Override
                     public void onNext(Movies movies) {
                         List<Movie> list = movies.getResults();
-
-                        if (type == "popular") {
-                            Log.i("TAG", "onNext: if work");
-                            List<ContentValues> values = new ArrayList<>();
-
-                            for (int i = 0; i < list.size(); i++) {
-                                ContentValues value = new ContentValues();
-                                Movie movie = list.get(i);
-                                value.put(Columns.ListMoviePopular.TITLE, movie.getTitle());
-                                value.put(Columns.ListMoviePopular.POSTER_PATH, movie.getPosterPath());
-
-
-                                values.add(value);
-                            }
-
-                            getContentResolver().delete(MovieContentProvider.ListMoviePopular.CONTENT_URI,
-                                    null, null);
-
-                            getContentResolver()
-                                    .bulkInsert(MovieContentProvider.ListMoviePopular.CONTENT_URI,
-                                            values.toArray(new ContentValues[values.size()]));
-                        } else {
-                            Log.i("TAG", "onNext: else  work");
-                            List<ContentValues> values = new ArrayList<>();
-
-                            for (int i = 0; i < list.size(); i++) {
-                                ContentValues value = new ContentValues();
-                                Movie movie = list.get(i);
-                                value.put(Columns.ListMovieTopRate.TITLE, movie.getTitle());
-                                value.put(Columns.ListMovieTopRate.POSTER_PATH, movie.getPosterPath());
-
-
-                                values.add(value);
-                            }
-
-                            getContentResolver().delete(MovieContentProvider.ListMovieTopRate.CONTENT_URI,
-                                    null, null);
-
-                            getContentResolver()
-                                    .bulkInsert(MovieContentProvider.ListMovieTopRate.CONTENT_URI,
-                                            values.toArray(new ContentValues[values.size()]));
-                        }
+                        movieInsert(list, "popular");
                     }
                 });
+    }
+
+    private void getMovieTopRated(String apiKey) {
+        MovieClient.getInstance()
+                .getMoviesTopRated(apiKey)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Movies>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Log.i("TAG", "In onError()");
+                    }
+
+                    @Override
+                    public void onNext(Movies movies) {
+                        List<Movie> list = movies.getResults();
+                        movieInsert(list, "top_rated");
+                    }
+                });
+    }
+
+    private void movieInsert(List<Movie> list, String type) {
+        List<ContentValues> values = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            ContentValues value = new ContentValues();
+            Movie movie = list.get(i);
+            value.put(Columns.ListMovie.TITLE, movie.getTitle());
+            value.put(Columns.ListMovie.POSTER_PATH, movie.getPosterPath());
+            value.put(Columns.ListMovie.TYPE, type);
+            values.add(value);
+        }
+
+        getContentResolver().delete(MovieContentProvider.ListMovie.withType(type),
+                null, null);
+        getContentResolver()
+                .bulkInsert(MovieContentProvider.ListMovie.CONTENT_URI,
+                        values.toArray(new ContentValues[values.size()]));
     }
 }
