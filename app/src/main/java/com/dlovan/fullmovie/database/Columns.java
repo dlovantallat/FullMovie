@@ -1,7 +1,6 @@
 package com.dlovan.fullmovie.database;
 
 import net.simonvt.schematic.annotation.AutoIncrement;
-import net.simonvt.schematic.annotation.Check;
 import net.simonvt.schematic.annotation.DataType;
 import net.simonvt.schematic.annotation.DataType.Type;
 import net.simonvt.schematic.annotation.PrimaryKey;
@@ -12,10 +11,7 @@ import net.simonvt.schematic.annotation.PrimaryKey;
 
 public interface Columns {
 
-    interface ListMovie {
-
-        String STATUS_POPULAR = "popular";
-        String STATUS_TOPRATED = "top_rated";
+    interface ListMoviePopular {
 
         @DataType(Type.INTEGER)
         @PrimaryKey
@@ -28,9 +24,21 @@ public interface Columns {
         @DataType(Type.TEXT)
         String POSTER_PATH = "poster_path";
 
+    }
+
+    interface ListMovieTopRate {
+
+        @DataType(Type.INTEGER)
+        @PrimaryKey
+        @AutoIncrement
+        String _ID = "id";
+
         @DataType(Type.TEXT)
-        @Check(Columns.ListMovie.STATUS + " in ('" + ListMovie.STATUS_POPULAR + "', '" + ListMovie.STATUS_TOPRATED + "')")
-        String STATUS = "status";
+        String TITLE = "title";
+
+        @DataType(Type.TEXT)
+        String POSTER_PATH = "poster_path";
+
     }
 
     interface DetailMovie {

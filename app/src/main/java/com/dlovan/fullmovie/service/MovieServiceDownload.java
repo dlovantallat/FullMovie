@@ -11,8 +11,8 @@ import com.dlovan.fullmovie.models.Movie;
 import com.dlovan.fullmovie.models.Movies;
 import com.dlovan.fullmovie.network.MovieClient;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import rx.Observer;
 import rx.Subscription;
@@ -35,6 +35,8 @@ public class MovieServiceDownload extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.i("Movie", "onHandleIntent: service started.");
+
         String apiKey = intent.getStringExtra(Api_key);
         String type = intent.getStringExtra(TYPE);
 
@@ -70,19 +72,47 @@ public class MovieServiceDownload extends IntentService {
                     public void onNext(Movies movies) {
                         List<Movie> list = movies.getResults();
 
-                        Vector<ContentValues> cVVector = new Vector<>(list.size());
-                        for (int i = 0; i < list.size(); i++) {
-                            ContentValues values = new ContentValues();
-                            Movie movie = list.get(i);
-                            values.put(Columns.ListMovie.TITLE, movie.getTitle());
-                            values.put(Columns.ListMovie.POSTER_PATH, movie.getPosterPath());
-                            values.put(Columns.ListMovie.STATUS, type);
+                        if (type == "popular") {
+                            Log.i("TAG", "onNext: if work");
+                            List<ContentValues> values = new ArrayList<>();
+
+                            for (int i = 0; i < list.size(); i++) {
+                                ContentValues value = new ContentValues();
+                                Movie movie = list.get(i);
+                                value.put(Columns.ListMoviePopular.TITLE, movie.getTitle());
+                                value.put(Columns.ListMoviePopular.POSTER_PATH, movie.getPosterPath());
+
+
+                                values.add(value);
+                            }
+
+                            getContentResolver().delete(MovieContentProvider.ListMoviePopular.CONTENT_URI,
+                                    null, null);
+
+                            getContentResolver()
+                                    .bulkInsert(MovieContentProvider.ListMoviePopular.CONTENT_URI,
+                                            values.toArray(new ContentValues[values.size()]));
+                        } else {
+                            Log.i("TAG", "onNext: else  work");
+                            List<ContentValues> values = new ArrayList<>();
+
+                            for (int i = 0; i < list.size(); i++) {
+                                ContentValues value = new ContentValues();
+                                Movie movie = list.get(i);
+                                value.put(Columns.ListMovieTopRate.TITLE, movie.getTitle());
+                                value.put(Columns.ListMovieTopRate.POSTER_PATH, movie.getPosterPath());
+
+
+                                values.add(value);
+                            }
+
+                            getContentResolver().delete(MovieContentProvider.ListMovieTopRate.CONTENT_URI,
+                                    null, null);
+
+                            getContentResolver()
+                                    .bulkInsert(MovieContentProvider.ListMovieTopRate.CONTENT_URI,
+                                            values.toArray(new ContentValues[values.size()]));
                         }
-
-                        ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                        cVVector.toArray(cvArray);
-
-                        getApplicationContext().getContentResolver().bulkInsert(MovieContentProvider.ListMovie.CONTENT_URI, cvArray);
                     }
                 });
     }

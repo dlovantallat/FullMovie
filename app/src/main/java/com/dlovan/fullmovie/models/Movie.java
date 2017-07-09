@@ -13,6 +13,11 @@ public class Movie {
     private double voteAverage;
     private String backdropPath;
 
+    public Movie(String title, String imagePath) {
+        this.title = title;
+        this.posterPath = imagePath;
+    }
+
     public String getBackdropPath() {
         return "https://image.tmdb.org/t/p/w500" + backdropPath;
     }

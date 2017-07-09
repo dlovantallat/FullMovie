@@ -23,7 +23,8 @@ public class MovieContentProvider {
 
 
     interface Path {
-        String LIST_MOVIE = "list_movie";
+        String LIST_MOVIE_POPULAR = "list_movie_popular";
+        String LIST_MOVIE_TOP_RATE = "list_movie_top_rate";
         String DETAIL_MOVIE = "detail_movie";
     }
 
@@ -38,13 +39,23 @@ public class MovieContentProvider {
         return builder.build();
     }
 
-    @TableEndpoint(table = MovieDatabase.Tables.LIST_MOVIE)
-    public static class ListMovie {
+    @TableEndpoint(table = MovieDatabase.Tables.LIST_MOVIE_POPULAR)
+    public static class ListMoviePopular {
 
         @ContentUri(
-                path = Path.LIST_MOVIE,
+                path = Path.LIST_MOVIE_POPULAR,
                 type = "vnd.android.cursor.dir/list")
-        public static final Uri CONTENT_URI = buildUri(Path.LIST_MOVIE);
+        public static final Uri CONTENT_URI = buildUri(Path.LIST_MOVIE_POPULAR);
+    }
+
+
+    @TableEndpoint(table = MovieDatabase.Tables.LIST_MOVIE_TOP_RATE)
+    public static class ListMovieTopRate {
+
+        @ContentUri(
+                path = Path.LIST_MOVIE_TOP_RATE,
+                type = "vnd.android.cursor.dir/list")
+        public static final Uri CONTENT_URI = buildUri(Path.LIST_MOVIE_TOP_RATE);
     }
 
     @TableEndpoint(table = MovieDatabase.Tables.DETAIL_MOVIE)
@@ -58,7 +69,7 @@ public class MovieContentProvider {
         @InexactContentUri(name = "NOTE_ID",
                 path = Path.DETAIL_MOVIE + "/#",
                 type = "vnd.android.cursor.item/list",
-                whereColumn = Columns.ListMovie._ID,
+                whereColumn = Columns.ListMoviePopular._ID,
                 pathSegment = 1)
         public static Uri withId(long id) {
             return buildUri(Path.DETAIL_MOVIE, String.valueOf(id));

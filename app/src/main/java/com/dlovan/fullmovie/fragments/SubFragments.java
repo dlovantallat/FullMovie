@@ -1,8 +1,10 @@
 package com.dlovan.fullmovie.fragments;
 
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -10,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ import rx.Subscription;
  * Created by dlovan on 7/4/17.
  */
 
-public abstract class SubFragments extends Fragment {
+public abstract class SubFragments extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     //this method get the type of movie
     //this method must be implementing
@@ -45,6 +46,7 @@ public abstract class SubFragments extends Fragment {
 
     MovieAdapter adapter;
     private Subscription subscription;
+    private static final int MOVIE_LOADER = 0;
 
     View root;
 
@@ -78,6 +80,7 @@ public abstract class SubFragments extends Fragment {
             }
         });
 
+        getActivity().getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
         return root;
     }
 
@@ -110,14 +113,14 @@ public abstract class SubFragments extends Fragment {
             Intent intent = new Intent(getActivity(), MovieServiceDownload.class);
             intent.putExtra(MovieServiceDownload.Api_key, "5ba1e2bf08bea434def560bf5014dbb8");
             intent.putExtra(MovieServiceDownload.TYPE, getType());
-            getActivity().startService(intent);
+//            getActivity().startService(intent);
 
-            Log.d("NO_INTERNET", "if work");
+//            Log.d("NO_INTERNET", "if work");
             nInternet.setVisibility(View.GONE);
             imageView.setVisibility(View.GONE);
             btnReload.setVisibility(View.GONE);
         } else {
-            Log.d("NO_INTERNET", "else work");
+//            Log.d("NO_INTERNET", "else work");
             nInternet.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.VISIBLE);
             btnReload.setVisibility(View.VISIBLE);

@@ -88,7 +88,8 @@ public class DatabaseTest {
 
         // list of all tables.
         final HashSet<String> tableNameHashSet = new HashSet<>();
-        tableNameHashSet.add("list_movie");
+        tableNameHashSet.add("list_movie_popular");
+        tableNameHashSet.add("list_movie_top_rate");
         tableNameHashSet.add("detail_movie");
 
         // have we created the tables we want?
@@ -114,29 +115,48 @@ public class DatabaseTest {
      */
     @Test
     public void crudTables() {
-        listMovie();
+        listMoviePopular();
         detailMovie();
     }
 
     /**
      * Test listMovie table for CRUD operations.
      */
-    public void listMovie() {
+    public void listMoviePopular() {
         ContentValues cv = new ContentValues();
-        cv.put(Columns.ListMovie._ID, 1);
-        cv.put(Columns.ListMovie.TITLE, "wonder woman");
-        cv.put(Columns.ListMovie.POSTER_PATH, "http");
-        cv.put(Columns.ListMovie.STATUS, "popular");
+        cv.put(Columns.ListMoviePopular._ID, 1);
+        cv.put(Columns.ListMoviePopular.TITLE, "wonder woman");
+        cv.put(Columns.ListMoviePopular.POSTER_PATH, "http");
 
         ContentValues cv1 = new ContentValues();
-        cv1.put(Columns.ListMovie._ID, 2);
-        cv1.put(Columns.ListMovie.TITLE, "wonder woman 2");
-        cv1.put(Columns.ListMovie.POSTER_PATH, "http//");
-        cv1.put(Columns.ListMovie.STATUS, "popular");
+        cv1.put(Columns.ListMoviePopular._ID, 2);
+        cv1.put(Columns.ListMoviePopular.TITLE, "wonder woman 2");
+        cv1.put(Columns.ListMoviePopular.POSTER_PATH, "http//");
+
 
         ContentValues[] values = {cv, cv1};
 
-        Uri uri = MovieContentProvider.ListMovie.CONTENT_URI;
+        Uri uri = MovieContentProvider.ListMoviePopular.CONTENT_URI;
+        insert(uri, values);
+        read(uri, values.length);
+        delete(uri, values.length);
+    }
+
+    public void listMovieTopRate() {
+        ContentValues cv = new ContentValues();
+        cv.put(Columns.ListMovieTopRate._ID, 1);
+        cv.put(Columns.ListMovieTopRate.TITLE, "wonder woman");
+        cv.put(Columns.ListMovieTopRate.POSTER_PATH, "http");
+
+        ContentValues cv1 = new ContentValues();
+        cv1.put(Columns.ListMovieTopRate._ID, 2);
+        cv1.put(Columns.ListMovieTopRate.TITLE, "wonder woman 2");
+        cv1.put(Columns.ListMovieTopRate.POSTER_PATH, "http//");
+
+
+        ContentValues[] values = {cv, cv1};
+
+        Uri uri = MovieContentProvider.ListMovieTopRate.CONTENT_URI;
         insert(uri, values);
         read(uri, values.length);
         delete(uri, values.length);

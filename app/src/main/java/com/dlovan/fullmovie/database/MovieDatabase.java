@@ -17,9 +17,13 @@ public class MovieDatabase {
     }
 
     static class Tables {
-        @Table(Columns.ListMovie.class)
+        @Table(Columns.ListMoviePopular.class)
         @IfNotExists
-        public static final String LIST_MOVIE = "list_movie";
+        public static final String LIST_MOVIE_POPULAR = "list_movie_popular";
+
+        @Table(Columns.ListMovieTopRate.class)
+        @IfNotExists
+        public static final String LIST_MOVIE_TOP_RATE = "list_movie_top_rate";
 
         @Table(Columns.DetailMovie.class)
         @IfNotExists
