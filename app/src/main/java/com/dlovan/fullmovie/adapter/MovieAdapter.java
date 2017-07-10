@@ -49,7 +49,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         holder.title.setText(movie.getTitle());
 
         Picasso.with(context)
-                .load(movie.getPosterPath())
+                .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())
                 .placeholder(R.drawable.placeholders)
                 .error(R.drawable.placeholders)
                 .into(holder.imageMovie);
@@ -57,7 +57,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         holder.viewClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(context, movie.getTitle() + "", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("ID", movie.getId());
                 intent.putExtra("TITLE", movie.getTitle());

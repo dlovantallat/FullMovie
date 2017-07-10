@@ -20,7 +20,10 @@ public interface Columns {
         @DataType(Type.INTEGER)
         @PrimaryKey
         @AutoIncrement
-        String _ID = "id";
+        String _ID = "_id";
+
+        @DataType(Type.INTEGER)
+        String ID = "movieId";
 
         @DataType(Type.TEXT)
         String TITLE = "title";
@@ -38,7 +41,10 @@ public interface Columns {
         @DataType(Type.INTEGER)
         @PrimaryKey
         @AutoIncrement
-        String _ID = "id";
+        String _ID = "_id";
+
+        @DataType(Type.INTEGER)
+        String ID = "movieId";
 
         @DataType(Type.TEXT)
         String TITLE = "title";

@@ -13,13 +13,14 @@ public class Movie {
     private double voteAverage;
     private String backdropPath;
 
-    public Movie(String title, String imagePath) {
+    public Movie(int id, String title, String imagePath) {
+        this.id = id;
         this.title = title;
         this.posterPath = imagePath;
     }
 
     public String getBackdropPath() {
-        return "https://image.tmdb.org/t/p/w500" + backdropPath;
+        return backdropPath;
     }
 
     public String getOverview() {
@@ -31,7 +32,7 @@ public class Movie {
     }
 
     public String getPosterPath() {
-        return "https://image.tmdb.org/t/p/w500" + posterPath;
+        return posterPath;
     }
 
     public String getTitle() {

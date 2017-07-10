@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
         root = inflater.inflate(R.layout.pager_fragment, container, false);
         ButterKnife.bind(this, root);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         adapter = new MovieAdapter(getActivity());
         recyclerView.setAdapter(adapter);
         checkInternet();
@@ -81,10 +82,31 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
+    public int getNumOfColumns() {
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+        int numOfColumns;
+        if (dpWidth < dpHeight) {
+            // portrait mode
+            numOfColumns = 2;
+            if (dpWidth >= 600) { // for tablet sw600
+                numOfColumns = 3;
+            }
+        } else {
+            // landscape mode
+            numOfColumns = 3;
+        }
+        return numOfColumns;
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
                 Columns.ListMovie._ID,
+                Columns.ListMovie.ID,
                 Columns.ListMovie.TITLE,
                 Columns.ListMovie.POSTER_PATH,
                 Columns.ListMovie.TYPE
@@ -98,13 +120,15 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         List<Movie> list = new ArrayList<>();
+        int id = cursor.getColumnIndex(Columns.ListMovie.ID);
         int ti = cursor.getColumnIndex(Columns.ListMovie.TITLE);
         int img = cursor.getColumnIndex(Columns.ListMovie.POSTER_PATH);
 
         while (cursor.moveToNext()) {
             String title = cursor.getString(ti);
             String image = cursor.getString(img);
-            list.add(new Movie(title, image));
+            int movieId = cursor.getInt(id);
+            list.add(new Movie(movieId, title, image));
         }
         adapter.setMovieList(list);
     }

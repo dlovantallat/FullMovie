@@ -46,7 +46,7 @@ public class MovieContentProvider {
                 type = "vnd.android.cursor.dir/list")
         public static final Uri CONTENT_URI = buildUri(Path.LIST_MOVIE);
 
-        @InexactContentUri(name = "NOTE_ID",
+        @InexactContentUri(name = "MOVIE_TYPE",
                 path = Path.LIST_MOVIE + "/*",
                 type = "vnd.android.cursor.item/list",
                 whereColumn = Columns.ListMovie.TYPE,
@@ -64,7 +64,7 @@ public class MovieContentProvider {
                 type = "vnd.android.cursor.dir/list")
         public static final Uri CONTENT_URI = buildUri(Path.DETAIL_MOVIE);
 
-        @InexactContentUri(name = "NOTE_ID",
+        @InexactContentUri(name = "MOVIE_ID",
                 path = Path.DETAIL_MOVIE + "/#",
                 type = "vnd.android.cursor.item/list",
                 whereColumn = Columns.ListMovie._ID,
