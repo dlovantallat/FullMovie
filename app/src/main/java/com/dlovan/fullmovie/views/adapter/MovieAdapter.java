@@ -1,4 +1,4 @@
-package com.dlovan.fullmovie.adapter;
+package com.dlovan.fullmovie.views.adapter;
 
 import android.content.Context;
 import android.content.Intent;

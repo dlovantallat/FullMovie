@@ -1,17 +1,15 @@
 package com.dlovan.fullmovie.fragments;
 
-import android.app.LoaderManager;
-import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +19,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dlovan.fullmovie.R;
-import com.dlovan.fullmovie.adapter.MovieAdapter;
 import com.dlovan.fullmovie.database.Columns;
 import com.dlovan.fullmovie.database.MovieContentProvider;
 import com.dlovan.fullmovie.models.Movie;
+import com.dlovan.fullmovie.utils.Utils;
+import com.dlovan.fullmovie.views.adapter.MovieAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,15 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
     @BindView(R.id.rec_list)
     RecyclerView recyclerView;
     @BindView(R.id.empty_view)
-    public TextView mEmptyView;
+    TextView mEmptyView;
+    @BindView(R.id.loading_indicator)
+    ProgressBar progressBar;
+    @BindView(R.id.no_internet)
+    TextView noInternet;
+    @BindView(R.id.no_internet_image)
+    ImageView imageView;
+    @BindView(R.id.btn_reload)
+    Button btnReload;
     MovieAdapter adapter;
     View root;
 
@@ -50,56 +57,17 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
         root = inflater.inflate(R.layout.pager_fragment, container, false);
         ButterKnife.bind(this, root);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), Utils.getNumOfColumns(getActivity())));
         adapter = new MovieAdapter(getActivity());
         recyclerView.setAdapter(adapter);
-        checkInternet();
 
-        getActivity().getLoaderManager().initLoader(1, null, this);
         return root;
     }
 
-
-    public void checkInternet() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        TextView nInternet = (TextView) root.findViewById(R.id.no_internet);
-        ImageView imageView = (ImageView) root.findViewById(R.id.no_internet_image);
-        Button btnReload = (Button) root.findViewById(R.id.btn_reload);
-
-        if (networkInfo != null && networkInfo.isConnected()) {
-            nInternet.setVisibility(View.GONE);
-            imageView.setVisibility(View.GONE);
-            btnReload.setVisibility(View.GONE);
-        } else {
-            nInternet.setVisibility(View.VISIBLE);
-            imageView.setVisibility(View.VISIBLE);
-            btnReload.setVisibility(View.VISIBLE);
-            nInternet.setText("No Internet Connection");
-            ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.loading_indicator);
-            progressBar.setVisibility(View.GONE);
-        }
-    }
-
-    public int getNumOfColumns() {
-
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-
-        int numOfColumns;
-        if (dpWidth < dpHeight) {
-            // portrait mode
-            numOfColumns = 2;
-            if (dpWidth >= 600) { // for tablet sw600
-                numOfColumns = 3;
-            }
-        } else {
-            // landscape mode
-            numOfColumns = 3;
-        }
-        return numOfColumns;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        getLoaderManager().initLoader(1, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -119,6 +87,18 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.i("TAG", "onLoadFinished: tt ");
+        if (cursor.getCount() == 0) {
+            if (Utils.isInternetAvailabe(getActivity())) {
+                noInternet.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+                btnReload.setVisibility(View.GONE);
+            } else {
+                noInternet.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
+                btnReload.setVisibility(View.VISIBLE);
+            }
+        }
         List<Movie> list = new ArrayList<>();
         int id = cursor.getColumnIndex(Columns.ListMovie.ID);
         int ti = cursor.getColumnIndex(Columns.ListMovie.TITLE);
@@ -131,6 +111,7 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
             list.add(new Movie(movieId, title, image));
         }
         adapter.setMovieList(list);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

@@ -91,6 +91,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.i("TAG", "onLoadFinished: detail ");
         if (cursor.getCount() == 0) {
             Intent intent = new Intent(this, MovieServiceDownload.class);
             intent.putExtra(MovieServiceDownload.DETAIL, movieId);

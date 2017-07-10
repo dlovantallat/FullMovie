@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.dlovan.fullmovie.R;
-import com.dlovan.fullmovie.adapter.PagerAdapter;
+import com.dlovan.fullmovie.views.adapter.PagerAdapter;
 import com.dlovan.fullmovie.service.MovieServiceDownload;
 
 import butterknife.BindView;
