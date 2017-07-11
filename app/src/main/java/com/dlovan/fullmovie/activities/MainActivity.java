@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.dlovan.fullmovie.R;
+import com.dlovan.fullmovie.fragments.PopularFragment;
+import com.dlovan.fullmovie.fragments.TopRatedFragment;
 import com.dlovan.fullmovie.views.adapter.PagerAdapter;
 import com.dlovan.fullmovie.service.MovieServiceDownload;
 
@@ -33,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //setup pager
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(new PopularFragment(), getString(R.string.popular));
+        pagerAdapter.addFragment(new TopRatedFragment(), getString(R.string.top_rated));
+        pager.setAdapter(pagerAdapter);
         tabs.setupWithViewPager(pager);
 
         //call service

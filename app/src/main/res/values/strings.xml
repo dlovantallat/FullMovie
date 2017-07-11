@@ -2,4 +2,6 @@
     <string name="app_name">FullMovie</string>
     <string name="no_internet">No Internet Connection</string>
     <string name="reload">reload</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
 </resources>

@@ -2,16 +2,19 @@ package com.dlovan.fullmovie.views.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dlovan.fullmovie.fragments.PopularFragment;
-import com.dlovan.fullmovie.fragments.TopRatedFragment;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * use for pager
  * Created by dlovan on 7/3/17.
  */
-public class PagerAdapter extends FragmentPagerAdapter {
+public class PagerAdapter extends FragmentStatePagerAdapter {
+
+    private final List<Fragment> mFragments = new ArrayList<>();
+    private final List<String> mFragmentTitles = new ArrayList<>();
 
     public PagerAdapter(FragmentManager fm) {
         super(fm);
@@ -19,29 +22,36 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return new PopularFragment();
-            case 1:
-                return new TopRatedFragment();
-            default:
-                return null;
-        }
+        return mFragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return mFragments.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return "POPULAR";
-            case 1:
-                return "TOP RATED";
-        }
-        return super.getPageTitle(position);
+        return mFragmentTitles.get(position);
+    }
+
+    /**
+     * Helper method to add fragments to the ViewPager
+     *
+     * @param fragment Fragment instance.
+     */
+    public void addFragment(Fragment fragment) {
+        mFragments.add(fragment);
+    }
+
+    /**
+     * Helper method to add fragments to the ViewPager
+     *
+     * @param fragment Fragment instance.
+     * @param title    Fragment title.
+     */
+    public void addFragment(Fragment fragment, String title) {
+        mFragments.add(fragment);
+        mFragmentTitles.add(title);
     }
 }
