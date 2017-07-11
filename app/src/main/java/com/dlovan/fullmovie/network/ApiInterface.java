@@ -12,7 +12,7 @@ import rx.Observable;
  * connect with movie client
  * Created by dlovan on 7/2/17.
  */
-interface MovieService {
+interface ApiInterface {
 
     /**
      * @param apiKey is a private key with my account in https://www.themoviedb.org

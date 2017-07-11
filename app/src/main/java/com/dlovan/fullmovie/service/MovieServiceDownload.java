@@ -8,14 +8,11 @@ import com.dlovan.fullmovie.database.Columns;
 import com.dlovan.fullmovie.database.MovieContentProvider;
 import com.dlovan.fullmovie.models.Movie;
 import com.dlovan.fullmovie.models.Movies;
-import com.dlovan.fullmovie.network.MovieClient;
+import com.dlovan.fullmovie.network.MovieApiClient;
+import com.dlovan.fullmovie.network.MovieCallback;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * this is the service for the app
@@ -43,50 +40,34 @@ public class MovieServiceDownload extends IntentService {
      * get list of popular movies from the server
      */
     private void getMoviePopular() {
-        MovieClient.getInstance()
-                .getMoviesPopular()
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Movies>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+        MovieApiClient.getMoviePopular(new MovieCallback<Movies>() {
+            @Override
+            public void onSuccess(Movies movies) {
+                movieInsert(movies.getResults(), "popular");
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(Movies movies) {
-                        List<Movie> list = movies.getResults();
-                        movieInsert(list, "popular");
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
      * get list of topRated movies from the server
      */
     private void getMovieTopRated() {
-        MovieClient.getInstance()
-                .getMoviesTopRated()
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Movies>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+        MovieApiClient.getMovieTopRated(new MovieCallback<Movies>() {
+            @Override
+            public void onSuccess(Movies movies) {
+                movieInsert(movies.getResults(), "top_rated");
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(Movies movies) {
-                        List<Movie> list = movies.getResults();
-                        movieInsert(list, "top_rated");
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -95,36 +76,29 @@ public class MovieServiceDownload extends IntentService {
      * @param movieId each movie has own id in the list of movies
      */
     private void getMovie(final int movieId) {
-        MovieClient.getInstance()
-                .getMovie(movieId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Movie>() {
-                    @Override
-                    public void onCompleted() {
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
+        MovieApiClient.getMovie(movieId, new MovieCallback<Movie>() {
+            @Override
+            public void onSuccess(Movie movie) {
+                List<ContentValues> values = new ArrayList<>();
+                ContentValues value = new ContentValues();
+                value.put(Columns.DetailMovie.ID, movie.getId());
+                value.put(Columns.DetailMovie.TITLE, movie.getTitle());
+                value.put(Columns.DetailMovie.OVERVIEW, movie.getOverview());
+                value.put(Columns.DetailMovie.POSTER_PATH, movie.getPosterPath());
+                value.put(Columns.DetailMovie.BACKDROP_PATH, movie.getBackdropPath());
+                value.put(Columns.DetailMovie.VOTE, movie.getVoteAverage());
+                values.add(value);
+                getContentResolver()
+                        .bulkInsert(MovieContentProvider.DetailMovie.withId(movieId),
+                                values.toArray(new ContentValues[values.size()]));
+            }
 
-                    @Override
-                    public void onNext(Movie movie) {
-                        List<ContentValues> values = new ArrayList<>();
-                        ContentValues value = new ContentValues();
-                        value.put(Columns.DetailMovie.ID, movie.getId());
-                        value.put(Columns.DetailMovie.TITLE, movie.getTitle());
-                        value.put(Columns.DetailMovie.OVERVIEW, movie.getOverview());
-                        value.put(Columns.DetailMovie.POSTER_PATH, movie.getPosterPath());
-                        value.put(Columns.DetailMovie.BACKDROP_PATH, movie.getBackdropPath());
-                        value.put(Columns.DetailMovie.VOTE, movie.getVoteAverage());
-                        values.add(value);
-                        getContentResolver()
-                                .bulkInsert(MovieContentProvider.DetailMovie.withId(movieId),
-                                        values.toArray(new ContentValues[values.size()]));
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
