@@ -1,9 +1,17 @@
 package com.dlovan.fullmovie.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+
+import com.dlovan.fullmovie.R;
+
+import java.util.Locale;
 
 /**
  * utils class
@@ -47,5 +55,37 @@ public class Utils {
             numOfColumns = 3;
         }
         return numOfColumns;
+    }
+
+
+    /**
+     * Helper method to set app language manually.
+     *
+     * @param context Context used to get app resources.
+     */
+    public static void setLanguage(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String language = preferences.getString(
+                context.getString(R.string.settings_language_key),
+                context.getString(R.string.settings_english_value));
+
+        Locale locale;
+        if (language.equals(context.getString(R.string.settings_kurdish_value))) {
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                locale = new Locale("ar", "EG");
+            } else {
+                locale = new Locale("ckb");
+            }
+
+        } else {
+            locale = new Locale(language);
+        }
+
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        context.getResources().updateConfiguration(config,
+                context.getResources().getDisplayMetrics());
     }
 }

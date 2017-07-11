@@ -18,6 +18,7 @@ import com.dlovan.fullmovie.R;
 import com.dlovan.fullmovie.database.Columns;
 import com.dlovan.fullmovie.database.MovieContentProvider;
 import com.dlovan.fullmovie.service.MovieServiceDownload;
+import com.dlovan.fullmovie.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
@@ -47,6 +48,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setLanguage(this);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 

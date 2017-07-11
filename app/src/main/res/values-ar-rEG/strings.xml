@@ -1,0 +1,21 @@
+<resources>
+    <string name="no_internet">نه‌ بوونی ئینته‌رنێت</string>
+    <string name="reload">بار كردنه‌ ووه‌</string>
+    <string name="popular">به‌ناوبانگ</string>
+    <string name="top_rated">"تۆپ "</string>
+
+    <string name="action_settings">رێكخستنه كان</string>
+
+
+    <string name="settings_language_key" translatable="false">language</string>
+    <string name="settings_language_default" translatable="false">@string/settings_english_value</string>
+
+    <string name="settings_english_label">ئینگلیز</string>
+    <string name="settings_english_value" translatable="false">en</string>
+
+    <string name="settings_kurdish_label">كوردی</string>
+    <string name="settings_kurdish_value" translatable="false">ckb</string>
+    <string name="settings_language_label">زمان</string>
+    <string name="app_name">كورد سینه‌ما</string>
+
+</resources>
