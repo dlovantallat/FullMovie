@@ -8,9 +8,9 @@ import com.dlovan.fullmovie.fragments.PopularFragment;
 import com.dlovan.fullmovie.fragments.TopRatedFragment;
 
 /**
+ * use for pager
  * Created by dlovan on 7/3/17.
  */
-
 public class PagerAdapter extends FragmentPagerAdapter {
 
     public PagerAdapter(FragmentManager fm) {

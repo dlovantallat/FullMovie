@@ -22,9 +22,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * movie adapter is a adapter for RecyclerView
  * Created by dlovan on 7/2/17.
  */
-
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
 
     private List<Movie> list = new ArrayList<>();
@@ -71,6 +71,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         return list.size();
     }
 
+    /**
+     * set the data for adapter
+     *
+     * @param movies one list movies
+     */
     public void setMovieList(List<Movie> movies) {
         list = movies;
         notifyDataSetChanged();
@@ -85,7 +90,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
         @BindView(R.id.view_click)
         LinearLayout viewClick;
 
-        public MovieHolder(View root) {
+        MovieHolder(View root) {
             super(root);
             ButterKnife.bind(this, root);
         }

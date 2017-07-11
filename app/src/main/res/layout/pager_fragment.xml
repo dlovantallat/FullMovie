@@ -38,9 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:text="@string/no_internet"
         android:textSize="32sp"
         android:visibility="gone"
-        android:text="No Internet Connection"
         tools:visibility="visible" />
 
     <Button
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/no_internet"
         android:layout_centerHorizontal="true"
-        android:text="reload"
+        android:text="@string/reload"
         android:visibility="gone"
         tools:visibility="visible" />
 

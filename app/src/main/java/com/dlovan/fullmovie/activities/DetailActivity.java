@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,12 +20,14 @@ import com.dlovan.fullmovie.database.MovieContentProvider;
 import com.dlovan.fullmovie.service.MovieServiceDownload;
 import com.squareup.picasso.Picasso;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    int movieId;
+    private int mMovieId;
 
     @BindView(R.id.title_detail_movie)
     TextView titleMovie;
@@ -49,17 +50,15 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
+        //setup toolbar with actionbar
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         Bundle bundle = getIntent().getExtras();
-        movieId = bundle.getInt("ID");
-        Log.i("TAG", "onCreate: " + movieId);
-
+        mMovieId = bundle.getInt("ID");
         setTitle(bundle.getString("TITLE"));
 
         getLoaderManager().initLoader(2, null, this);
@@ -86,15 +85,14 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 Columns.DetailMovie.BACKDROP_PATH,
                 Columns.DetailMovie.VOTE};
 
-        return new CursorLoader(getApplicationContext(), MovieContentProvider.DetailMovie.CONTENT_URI, projection, " movieId = ? ", new String[]{Integer.toString(movieId)}, null);
+        return new CursorLoader(getApplicationContext(), MovieContentProvider.DetailMovie.CONTENT_URI, projection, " movieId = ? ", new String[]{Integer.toString(mMovieId)}, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        Log.i("TAG", "onLoadFinished: detail ");
         if (cursor.getCount() == 0) {
             Intent intent = new Intent(this, MovieServiceDownload.class);
-            intent.putExtra(MovieServiceDownload.DETAIL, movieId);
+            intent.putExtra(MovieServiceDownload.DETAIL, mMovieId);
             startService(intent);
         } else {
             cursor.moveToFirst();
@@ -106,7 +104,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
             titleMovie.setText(title);
             overviewMovie.setText(overview);
-            vote.setText(Double.toString(movieVote));
+            vote.setText(String.format(Locale.US, "%.1f", movieVote));
 
             Picasso.with(getApplicationContext())
                     .load("https://image.tmdb.org/t/p/w500" + poster)
@@ -126,6 +124,5 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 }

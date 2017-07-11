@@ -2,6 +2,8 @@
   <dictionary name="dlovan">
     <words>
       <w>fullmovie</w>
+      <w>sqlite</w>
+      <w>themoviedb</w>
     </words>
   </dictionary>
 </component>

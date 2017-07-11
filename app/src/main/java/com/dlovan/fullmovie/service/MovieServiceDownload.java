@@ -3,7 +3,6 @@ package com.dlovan.fullmovie.service;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.util.Log;
 
 import com.dlovan.fullmovie.database.Columns;
 import com.dlovan.fullmovie.database.MovieContentProvider;
@@ -19,9 +18,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
+ * this is the service for the app
  * Created by dlovan on 7/8/17.
  */
-
 public class MovieServiceDownload extends IntentService {
 
     public static final String DETAIL = "detail";
@@ -32,29 +31,29 @@ public class MovieServiceDownload extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        getMoviePopular("5ba1e2bf08bea434def560bf5014dbb8");
-        getMovieTopRated("5ba1e2bf08bea434def560bf5014dbb8");
+        getMoviePopular();
+        getMovieTopRated();
         int movieId = intent.getIntExtra(DETAIL, 0);
         if (movieId != 0) {
-            getMovie(movieId, "5ba1e2bf08bea434def560bf5014dbb8");
+            getMovie(movieId);
         }
-
     }
 
-    private void getMoviePopular(String apiKey) {
+    /**
+     * get list of popular movies from the server
+     */
+    private void getMoviePopular() {
         MovieClient.getInstance()
-                .getMoviesPopular(apiKey)
+                .getMoviesPopular()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Movies>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        Log.d("TAG", "In onError()");
                     }
 
                     @Override
@@ -65,9 +64,12 @@ public class MovieServiceDownload extends IntentService {
                 });
     }
 
-    private void getMovieTopRated(String apiKey) {
+    /**
+     * get list of topRated movies from the server
+     */
+    private void getMovieTopRated() {
         MovieClient.getInstance()
-                .getMoviesTopRated(apiKey)
+                .getMoviesTopRated()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Movies>() {
                     @Override
@@ -77,7 +79,6 @@ public class MovieServiceDownload extends IntentService {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        Log.i("TAG", "In onError()");
                     }
 
                     @Override
@@ -88,26 +89,28 @@ public class MovieServiceDownload extends IntentService {
                 });
     }
 
-    private void getMovie(final int movieId, String apiKey) {
+    /**
+     * get movie data from the server
+     *
+     * @param movieId each movie has own id in the list of movies
+     */
+    private void getMovie(final int movieId) {
         MovieClient.getInstance()
-                .getMovie(movieId, apiKey)
+                .getMovie(movieId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Movie>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        Log.i("TAG", "In onError()");
                     }
 
                     @Override
                     public void onNext(Movie movie) {
-                        Log.i("TAG", "onNext: detail");
                         List<ContentValues> values = new ArrayList<>();
                         ContentValues value = new ContentValues();
                         value.put(Columns.DetailMovie.ID, movie.getId());
@@ -117,7 +120,6 @@ public class MovieServiceDownload extends IntentService {
                         value.put(Columns.DetailMovie.BACKDROP_PATH, movie.getBackdropPath());
                         value.put(Columns.DetailMovie.VOTE, movie.getVoteAverage());
                         values.add(value);
-
                         getContentResolver()
                                 .bulkInsert(MovieContentProvider.DetailMovie.withId(movieId),
                                         values.toArray(new ContentValues[values.size()]));
@@ -125,6 +127,12 @@ public class MovieServiceDownload extends IntentService {
                 });
     }
 
+    /**
+     * insert data to the database
+     *
+     * @param list list of movies
+     * @param type popular or topRated
+     */
     private void movieInsert(List<Movie> list, String type) {
         List<ContentValues> values = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -137,6 +145,7 @@ public class MovieServiceDownload extends IntentService {
             values.add(value);
         }
 
+        //delete popular or topRated before added new data
         getContentResolver().delete(MovieContentProvider.ListMovie.withType(type),
                 null, null);
         getContentResolver()

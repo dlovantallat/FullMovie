@@ -5,11 +5,11 @@ import net.simonvt.schematic.annotation.IfNotExists;
 import net.simonvt.schematic.annotation.Table;
 
 /**
+ * our movie database
  * Created by dlovan on 7/5/17.
  */
-
 @Database(version = MovieDatabase.VERSION, packageName = MovieContentProvider.DATABASE_NAME)
-public class MovieDatabase {
+class MovieDatabase {
 
     static final int VERSION = 1;
 
@@ -19,11 +19,10 @@ public class MovieDatabase {
     static class Tables {
         @Table(Columns.ListMovie.class)
         @IfNotExists
-        public static final String LIST_MOVIE = "list_movie";
+        static final String LIST_MOVIE = "list_movie";
 
         @Table(Columns.DetailMovie.class)
         @IfNotExists
-        public static final String DETAIL_MOVIE = "detail_movie";
+        static final String DETAIL_MOVIE = "detail_movie";
     }
-
 }

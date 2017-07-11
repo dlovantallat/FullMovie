@@ -12,18 +12,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 
 /**
+ * use for rx_java Retrofit network
  * Created by dlovan on 7/2/17.
  */
-
 public class MovieClient {
 
     private static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/";
-
+    private static final String API_KEY = "5ba1e2bf08bea434def560bf5014dbb8";
     private static MovieClient instance;
     private MovieService movieService;
 
     private MovieClient() {
-
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
@@ -37,6 +36,11 @@ public class MovieClient {
         movieService = retrofit.create(MovieService.class);
     }
 
+    /**
+     * this method make sure that this class has one instance
+     *
+     * @return the instance of this class
+     */
     public static MovieClient getInstance() {
         if (instance == null) {
             instance = new MovieClient();
@@ -44,15 +48,25 @@ public class MovieClient {
         return instance;
     }
 
-    public Observable<Movies> getMoviesPopular(String apiKey) {
-        return movieService.getMoviesPopular(apiKey);
+    /**
+     * @return list of popular movie
+     */
+    public Observable<Movies> getMoviesPopular() {
+        return movieService.getMoviesPopular(API_KEY);
     }
 
-    public Observable<Movies> getMoviesTopRated(String apiKey) {
-        return movieService.getMoviesTopRated(apiKey);
+    /**
+     * @return list of top rated movie
+     */
+    public Observable<Movies> getMoviesTopRated() {
+        return movieService.getMoviesTopRated(API_KEY);
     }
 
-    public Observable<Movie> getMovie(int movieId, String apiKey) {
-        return movieService.getMovie(movieId, apiKey);
+    /**
+     * @param movieId each movie has own id in the list of movies
+     * @return all the detail of movie
+     */
+    public Observable<Movie> getMovie(int movieId) {
+        return movieService.getMovie(movieId, API_KEY);
     }
 }

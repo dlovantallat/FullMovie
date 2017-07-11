@@ -7,11 +7,14 @@ import net.simonvt.schematic.annotation.DataType.Type;
 import net.simonvt.schematic.annotation.PrimaryKey;
 
 /**
+ * this interface hold all columns number for the tables in database
  * Created by dlovan on 7/5/17.
  */
-
 public interface Columns {
 
+    /**
+     * hold all columns for listMovie table
+     */
     interface ListMovie {
 
         String POPULAR = "popular";
@@ -36,6 +39,9 @@ public interface Columns {
         String TYPE = "type";
     }
 
+    /**
+     * hold all columns for detailMovie table
+     */
     interface DetailMovie {
 
         @DataType(Type.INTEGER)

@@ -1,15 +1,13 @@
 package com.dlovan.fullmovie.fragments;
 
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +30,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * hold all top_rated fragment
  * Created by dlovan on 7/3/17.
  */
-
 public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.rec_list)
@@ -49,23 +47,24 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
     ImageView imageView;
     @BindView(R.id.btn_reload)
     Button btnReload;
-    MovieAdapter adapter;
-    View root;
+
+    private MovieAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.pager_fragment, container, false);
+        View root = inflater.inflate(R.layout.pager_fragment, container, false);
         ButterKnife.bind(this, root);
 
+        //setup recycler view
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), Utils.getNumOfColumns(getActivity())));
-        adapter = new MovieAdapter(getActivity());
-        recyclerView.setAdapter(adapter);
+        mAdapter = new MovieAdapter(getActivity());
+        recyclerView.setAdapter(mAdapter);
 
         return root;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(1, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -87,9 +86,8 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        Log.i("TAG", "onLoadFinished: tt ");
         if (cursor.getCount() == 0) {
-            if (Utils.isInternetAvailabe(getActivity())) {
+            if (Utils.isInternetAvailable(getActivity())) {
                 noInternet.setVisibility(View.GONE);
                 imageView.setVisibility(View.GONE);
                 btnReload.setVisibility(View.GONE);
@@ -110,12 +108,11 @@ public class TopRatedFragment extends Fragment implements LoaderManager.LoaderCa
             int movieId = cursor.getInt(id);
             list.add(new Movie(movieId, title, image));
         }
-        adapter.setMovieList(list);
+        mAdapter.setMovieList(list);
         progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 }

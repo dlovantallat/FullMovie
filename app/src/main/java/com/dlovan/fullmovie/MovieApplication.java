@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.stetho.Stetho;
 
 /**
+ * this class for debug purpose
  * Created by dlovan on 7/9/17.
  */
 

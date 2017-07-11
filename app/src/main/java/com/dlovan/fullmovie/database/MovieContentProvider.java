@@ -8,9 +8,9 @@ import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
 /**
+ * our content provider
  * Created by dlovan on 7/5/17.
  */
-
 @ContentProvider(
         authority = MovieContentProvider.AUTHORITY,
         database = MovieDatabase.class,
@@ -19,7 +19,7 @@ public class MovieContentProvider {
 
     static final String AUTHORITY = "com.dlovan.fullmovie.MovieContentProvider";
     static final String DATABASE_NAME = "com.dlovan.fullmovie.provider";
-    static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
 
     interface Path {

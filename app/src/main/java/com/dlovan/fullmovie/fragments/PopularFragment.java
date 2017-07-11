@@ -2,14 +2,12 @@ package com.dlovan.fullmovie.fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +30,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * hold all popular fragment
  * Created by dlovan on 7/3/17.
  */
-
 public class PopularFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.rec_list)
@@ -50,31 +48,29 @@ public class PopularFragment extends Fragment implements LoaderManager.LoaderCal
     @BindView(R.id.btn_reload)
     Button btnReload;
 
-    MovieAdapter adapter;
-    View root;
+    private MovieAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.pager_fragment, container, false);
+        View root = inflater.inflate(R.layout.pager_fragment, container, false);
         ButterKnife.bind(this, root);
-        Log.i("TAG", "onCreateView: ");
 
+        //setup recycler view
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), Utils.getNumOfColumns(getActivity())));
-        adapter = new MovieAdapter(getActivity());
-        recyclerView.setAdapter(adapter);
+        mAdapter = new MovieAdapter(getActivity());
+        recyclerView.setAdapter(mAdapter);
 
         return root;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().restartLoader(0, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Log.i("TAG", "onCreateLoader: ");
         String[] projection = {
                 Columns.ListMovie._ID,
                 Columns.ListMovie.ID,
@@ -90,9 +86,8 @@ public class PopularFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        Log.i("TAG", "onLoadFinished: pp ");
         if (cursor.getCount() == 0) {
-            if (Utils.isInternetAvailabe(getActivity())) {
+            if (Utils.isInternetAvailable(getActivity())) {
                 noInternet.setVisibility(View.GONE);
                 imageView.setVisibility(View.GONE);
                 btnReload.setVisibility(View.GONE);
@@ -113,12 +108,11 @@ public class PopularFragment extends Fragment implements LoaderManager.LoaderCal
             int movieId = cursor.getInt(id);
             list.add(new Movie(movieId, title, image));
         }
-        adapter.setMovieList(list);
+        mAdapter.setMovieList(list);
         progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-
     }
 }

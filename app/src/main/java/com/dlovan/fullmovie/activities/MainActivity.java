@@ -29,12 +29,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        //setup toolbar
         setSupportActionBar(toolbar);
 
+        //setup pager
         pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
-
         tabs.setupWithViewPager(pager);
 
+        //call service
         Intent intent = new Intent(this, MovieServiceDownload.class);
         startService(intent);
     }
