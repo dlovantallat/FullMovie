@@ -1,12 +1,10 @@
 package com.dlovan.fullmovie.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
 import com.dlovan.fullmovie.R;
@@ -64,11 +62,9 @@ public class Utils {
      * @param context Context used to get app resources.
      */
     public static void setLanguage(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String language = preferences.getString(
+        String language = PreferencesUtils.getInstance(context).setLanguage(
                 context.getString(R.string.settings_language_key),
                 context.getString(R.string.settings_english_value));
-
         Locale locale;
         if (language.equals(context.getString(R.string.settings_kurdish_value))) {
 
